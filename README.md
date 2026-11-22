@@ -57,7 +57,10 @@ bash
 curl http://localhost:8080
 
 
-INSERIR AQUI A CAPTURA DE TELA DO TERMINAL MOSTRANDO O CONTÊINER EM EXECUÇÃO E A PÁGINA PERSONALIZADA.
+DESCRIÇÃO DA EVIDÊNCIA 1: O comando docker ps lista os contêineres em execução. O resultado esperado é uma linha com o contêiner nginx-carine, imagem nginx, status "Up" e porta 8080->80/tcp.
+
+DESCRIÇÃO DA EVIDÊNCIA 2: O comando curl http://localhost:8080 faz uma requisição ao NGINX. O resultado esperado é o texto "Pagina personalizada - Carine Mesquita Freitas", que mostra que a página foi substituída com sucesso.
+
 
 3. EXECUÇÃO DA APLICAÇÃO NO KUBERNETES
 
@@ -124,7 +127,7 @@ bash
 kubectl exec deployment/nginx-carine -- curl -s http://localhost
 
 
-EVIDÊNCIA 3 – INSERIR A CAPTURA DE TELA MOSTRANDO O POD EM EXECUÇÃO E A MENSAGEM PERSONALIZADA COM MEU NOME.
+EVIDÊNCIA 3 – DESCRIÇÃO: O comando kubectl get pods lista os Pods. O resultado esperado é um Pod nginx-carine-xxxxx com READY 1/1 e STATUS Running. O comando kubectl exec deve retornar "Aplicacao Kubernetes - Carine Mesquita Freitas".
 
 4. ESCALABILIDADE E AUTORRECUPERAÇÃO
 
@@ -140,7 +143,7 @@ bash
 kubectl get pods
 
 
-EVIDÊNCIA 4 – INSERIR A CAPTURA DE TELA MOSTRANDO OS TRÊS PODS DA APLICAÇÃO EM EXECUÇÃO.
+EVIDÊNCIA 4 – DESCRIÇÃO: Após kubectl scale --replicas=3, o comando kubectl get pods deve listar três Pods nginx-carine, todos com STATUS Running.
 
 EVIDÊNCIA 5 – AUTORRECUPERAÇÃO
 
@@ -166,7 +169,7 @@ kubectl get pods
 
 O Kubernetes identifica a exclusão e cria automaticamente outro Pod para manter a quantidade de réplicas definida no Deployment.
 
-INSERIR AQUI A CAPTURA DE TELA MOSTRANDO A EXCLUSÃO DO POD E A CRIAÇÃO DE UM NOVO.
+EVIDÊNCIA 5 – DESCRIÇÃO: Após kubectl delete pod, o Pod excluído fica em Terminating e o Deployment cria um novo Pod automaticamente. Na nova consulta, aparecem novamente três Pods, sendo um deles recém-criado, com AGE de poucos segundos.
 
 5. DISPONIBILIZAÇÃO DA APLICAÇÃO
 
@@ -194,7 +197,7 @@ kubectl run teste --image=curlimages/curl --rm -it --restart=Never -- curl -s ht
 
 O comando realiza uma requisição HTTP ao serviço NGINX e apresenta o conteúdo da página personalizada.
 
-INSERIR AQUI A CAPTURA DE TELA MOSTRANDO O SERVICE E O RETORNO DA PÁGINA NGINX.
+EVIDÊNCIA 6 – DESCRIÇÃO: O comando kubectl get services deve mostrar o Service nginx-carine, tipo ClusterIP, porta 80. O teste com curl deve retornar o conteúdo da página personalizada com o nome Carine Mesquita Freitas.
 
 6. INTERPRETAÇÃO DOS RESULTADOS
 
