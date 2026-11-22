@@ -1,86 +1,75 @@
-INSTITUIÇÃO: Anhanguera
-DISCIPLINA: Computação em Nuvem
-PROFESSORA: Simone Tatiane do Canto
-ALUNA: Carine Mesquita Freitas
+# Prova Prática Integrada – Computação em Nuvem
 
-1. FUNDAMENTOS DA COMPUTAÇÃO EM NUVEM
+**Instituição:** Anhanguera
+**Disciplina:** Computação em Nuvem
+**Professora:** Simone Tatiane do Canto
+**Aluna:** Carine Mesquita Freitas
 
-QUESTÃO 1 – QUAL É A DIFERENÇA ENTRE IaaS E SaaS? CITE UM EXEMPLO DE UTILIZAÇÃO DE CADA MODELO.
+## 1. Fundamentos da Computação em Nuvem
 
-RESPOSTA:
+### Questão 1 – Qual é a diferença entre IaaS e SaaS? Cite um exemplo de utilização de cada modelo.
 
 IaaS é um modelo que oferece recursos de infraestrutura pela internet, como servidores, armazenamento e redes. Um exemplo é o Amazon EC2, utilizado para criar servidores virtuais.
 
 SaaS é um programa disponibilizado pela internet, sem a necessidade de instalação no computador do usuário. Um exemplo é o Google Drive, utilizado para armazenar e compartilhar arquivos.
 
-QUESTÃO 2 – UMA EMPRESA UTILIZA SERVIDORES PRÓPRIOS E TAMBÉM RECURSOS DE UM PROVEDOR DE NUVEM PÚBLICA. QUAL MODELO DE IMPLEMENTAÇÃO EM NUVEM ESSA EMPRESA UTILIZA?
-
-RESPOSTA:
+### Questão 2 – Uma empresa utiliza servidores próprios e também recursos de um provedor de nuvem pública. Qual modelo de implementação em nuvem essa empresa utiliza?
 
 A empresa utiliza o modelo de nuvem híbrida, pois combina sua infraestrutura própria (nuvem privada) com os recursos oferecidos por um provedor de nuvem pública.
 
-QUESTÃO 3 – QUAL É A PRINCIPAL DIFERENÇA ENTRE UMA MÁQUINA VIRTUAL E UM CONTÊINER?
-
-RESPOSTA:
+### Questão 3 – Qual é a principal diferença entre uma máquina virtual e um contêiner?
 
 A máquina virtual possui um sistema operacional próprio, funcionando de forma independente. Já o contêiner compartilha o sistema operacional da máquina hospedeira, sendo mais leve, rápido e consumindo menos recursos.
+## 2. Execução de Aplicativo com Docker
 
-2. EXECUÇÃO DE APLICATIVO COM DOCKER
+**Objetivo:** Executar um servidor NGINX utilizando o Docker, verificar seu funcionamento e personalizar a página web.
 
-OBJETIVO: Executar um servidor NGINX utilizando o Docker, verificar seu funcionamento e personalizar a página web.
+### Evidência 1 – Contêiner em execução
 
-EVIDÊNCIA 1 – CONTÊINER EM EXECUÇÃO
+Comando utilizado:
 
-COMANDO UTILIZADO:
-
-bash
+```bash
 docker ps
+```
 
+Descrição: o comando docker ps lista os contêineres em execução. O resultado esperado é uma linha com o contêiner nginx-carine, imagem nginx, status "Up" e porta 8080->80/tcp.
 
-EVIDÊNCIA 2 – PÁGINA PERSONALIZADA COM MEU NOME
+### Evidência 2 – Página personalizada com meu nome
 
 Para executar o NGINX e personalizar a página, foram utilizados os seguintes comandos:
 
-bash
+```bash
 docker run -d --name nginx-carine -p 8080:80 nginx
-
-bash
 echo '<h1>Pagina personalizada - Carine Mesquita Freitas</h1>' > index.html
-
-bash
 docker cp index.html nginx-carine:/usr/share/nginx/html/index.html
-
+```
 
 Para verificar o funcionamento:
 
-bash
+```bash
 curl http://localhost:8080
+```
 
+Descrição: o resultado esperado é o texto "Pagina personalizada - Carine Mesquita Freitas", que mostra que a página foi substituída com sucesso.
+## 3. Execução da Aplicação no Kubernetes
 
-DESCRIÇÃO DA EVIDÊNCIA 1: O comando docker ps lista os contêineres em execução. O resultado esperado é uma linha com o contêiner nginx-carine, imagem nginx, status "Up" e porta 8080->80/tcp.
-
-DESCRIÇÃO DA EVIDÊNCIA 2: O comando curl http://localhost:8080 faz uma requisição ao NGINX. O resultado esperado é o texto "Pagina personalizada - Carine Mesquita Freitas", que mostra que a página foi substituída com sucesso.
-
-
-3. EXECUÇÃO DA APLICAÇÃO NO KUBERNETES
-
-OBJETIVO: Criar um Deployment e executar um Pod utilizando o Kubernetes.
+**Objetivo:** Criar um Deployment e executar um Pod utilizando o Kubernetes.
 
 Para criar a página personalizada, foi utilizado:
 
-bash
+```bash
 echo '<h1>Aplicacao Kubernetes - Carine Mesquita Freitas</h1>' > index.html
-
+```
 
 Em seguida, foi criado um configmap:
 
-bash
+```bash
 kubectl create configmap pagina-carine --from-file=index.html
+```
 
+Foi criado o arquivo de configuração do Deployment, salvo como deployment.yaml:
 
-Foi criado o arquivo de configuração do Deployment:
-
-yaml
+```yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -107,129 +96,118 @@ spec:
       - name: pagina
         configMap:
           name: pagina-carine
+```
 
+Para aplicar o arquivo:
 
-Salvar o arquivo como deployment.yaml e executar:
-
-bash
+```bash
 kubectl apply -f deployment.yaml
+```
 
+Comando utilizado para listar os Pods:
 
-COMANDO UTILIZADO:
-
-bash
+```bash
 kubectl get pods
-
+```
 
 Para verificar a página personalizada:
 
-bash
+```bash
 kubectl exec deployment/nginx-carine -- curl -s http://localhost
+```
 
+### Evidência 3 – Pod em execução e mensagem personalizada
 
-EVIDÊNCIA 3 – DESCRIÇÃO: O comando kubectl get pods lista os Pods. O resultado esperado é um Pod nginx-carine-xxxxx com READY 1/1 e STATUS Running. O comando kubectl exec deve retornar "Aplicacao Kubernetes - Carine Mesquita Freitas".
+Descrição: o comando kubectl get pods lista os Pods. O resultado esperado é um Pod nginx-carine-xxxxx com READY 1/1 e STATUS Running. O comando kubectl exec deve retornar "Aplicacao Kubernetes - Carine Mesquita Freitas".
 
-4. ESCALABILIDADE E AUTORRECUPERAÇÃO
+## 4. Escalabilidade e Autorrecuperação
 
 Para aumentar a quantidade de Pods da aplicação para três, foi utilizado o comando:
 
-bash
+```bash
 kubectl scale deployment nginx-carine --replicas=3
+```
 
+Comando utilizado para listar os Pods:
 
-COMANDO UTILIZADO:
-
-bash
+```bash
 kubectl get pods
+```
 
+### Evidência 4 – Três Pods em execução
 
-EVIDÊNCIA 4 – DESCRIÇÃO: Após kubectl scale --replicas=3, o comando kubectl get pods deve listar três Pods nginx-carine, todos com STATUS Running.
+Descrição: após kubectl scale --replicas=3, o comando kubectl get pods deve listar três Pods nginx-carine, todos com STATUS Running.
 
-EVIDÊNCIA 5 – AUTORRECUPERAÇÃO
-
-COMANDOS UTILIZADOS:
+### Evidência 5 – Autorrecuperação
 
 Primeiro, foi consultada a lista de Pods:
 
-bash
+```bash
 kubectl get pods
-
+```
 
 Depois, foi excluído um dos Pods:
 
-bash
+```bash
 kubectl delete pod NOME_DO_POD
-
+```
 
 Em seguida, foi realizada uma nova consulta:
 
-bash
+```bash
 kubectl get pods
-
+```
 
 O Kubernetes identifica a exclusão e cria automaticamente outro Pod para manter a quantidade de réplicas definida no Deployment.
 
-EVIDÊNCIA 5 – DESCRIÇÃO: Após kubectl delete pod, o Pod excluído fica em Terminating e o Deployment cria um novo Pod automaticamente. Na nova consulta, aparecem novamente três Pods, sendo um deles recém-criado, com AGE de poucos segundos.
+Descrição: após kubectl delete pod, o Pod excluído fica em Terminating e o Deployment cria um novo Pod automaticamente. Na nova consulta, aparecem novamente três Pods, sendo um deles recém-criado, com AGE de poucos segundos.
 
-5. DISPONIBILIZAÇÃO DA APLICAÇÃO
+## 5. Disponibilização da Aplicação
 
-OBJETIVO: Criar um Service e verificar a comunicação HTTP dentro do cluster Kubernetes.
+**Objetivo:** Criar um Service e verificar a comunicação HTTP dentro do cluster Kubernetes.
 
-EVIDÊNCIA 6 – SERVICE E ACESSO HTTP
+### Evidência 6 – Service e acesso HTTP
 
 Para disponibilizar a aplicação dentro do cluster, foi criado um Service:
 
-bash
+```bash
 kubectl expose deployment nginx-carine --name=nginx-carine --port=80 --target-port=80 --type=ClusterIP
+```
 
+Comando para listar os Services:
 
-COMANDOS UTILIZADOS:
-
-bash
+```bash
 kubectl get services
-
+```
 
 Para testar a comunicação HTTP dentro do cluster:
 
-bash
+```bash
 kubectl run teste --image=curlimages/curl --rm -it --restart=Never -- curl -s http://nginx-carine
-
+```
 
 O comando realiza uma requisição HTTP ao serviço NGINX e apresenta o conteúdo da página personalizada.
 
-EVIDÊNCIA 6 – DESCRIÇÃO: O comando kubectl get services deve mostrar o Service nginx-carine, tipo ClusterIP, porta 80. O teste com curl deve retornar o conteúdo da página personalizada com o nome Carine Mesquita Freitas.
+Descrição: o comando kubectl get services deve mostrar o Service nginx-carine, tipo ClusterIP, porta 80. O teste com curl deve retornar o conteúdo da página personalizada com o nome Carine Mesquita Freitas.
 
-6. INTERPRETAÇÃO DOS RESULTADOS
+## 6. Interpretação dos Resultados
 
-QUESTÃO 1 – QUAL A DIFERENÇA ENTRE UMA IMAGEM DOCKER E UM CONTÊINER EM EXECUÇÃO?
-
-RESPOSTA:
+### Questão 1 – Qual a diferença entre uma imagem Docker e um contêiner em execução?
 
 A imagem Docker é um modelo que contém tudo o que é necessário para executar uma aplicação. Já o contêiner é a instância dessa imagem em funcionamento, executando a aplicação de forma isolada.
 
-QUESTÃO 2 – QUAL A FUNÇÃO DE UM DEPLOYMENT NO KUBERNETES?
-
-RESPOSTA:
+### Questão 2 – Qual a função de um Deployment no Kubernetes?
 
 O Deployment é responsável por gerenciar os Pods da aplicação, controlar a quantidade de réplicas e garantir que elas permaneçam em execução. Também permite atualizar e administrar as aplicações.
 
-QUESTÃO 3 – O QUE ACONTECEU QUANDO VOCÊ EXCLUIU UM POD? POR QUE ISSO ACONTECEU?
-
-RESPOSTA:
+### Questão 3 – O que aconteceu quando você excluiu um Pod? Por que isso aconteceu?
 
 Quando excluí um Pod, o Kubernetes identificou que a quantidade de réplicas estava abaixo do esperado e criou automaticamente outro Pod para substituí-lo. Isso aconteceu porque o Deployment mantém o número de réplicas configurado.
 
-QUESTÃO 4 – QUAL É A FINALIDADE DE UM SERVICE NO KUBERNETES?
-
-RESPOSTA:
+### Questão 4 – Qual é a finalidade de um Service no Kubernetes?
 
 O Service permite a comunicação com os Pods por meio de um endereço e uma porta estáveis. Ele também encaminha as requisições para os Pods disponíveis, facilitando o acesso à aplicação dentro do cluster.
 
-7. CONCLUSÃO
+## 7. Conclusão
 
 Durante a atividade prática, aprendi a utilizar o Docker para executar e personalizar uma aplicação com NGINX. Também aprendi a criar e gerenciar Pods e Deployments no Kubernetes. Consegui compreender como funciona a escalabilidade e a recuperação automática dos Pods. Por fim, aprendi a criar um Service e testar a comunicação HTTP dentro do cluster.
-
-
-
-
-
